@@ -36,14 +36,13 @@ int main(int argc, char* argv[]){
     if(listen(serv_sock, 20) == -1)
         error_handling("listen() error");
 
-//    while(1){
+    while(1){
         client_adr_size = sizeof(client_adr);
         client_sock = accept(serv_sock, (struct sockaddr*)&client_adr, &client_adr_size);
         printf("Connection request: %s:%d\n", inet_ntoa(client_adr.sin_addr), ntohs(client_adr.sin_port));
-        request_handler(&client_sock);
-//        pthread_create(&t_id, NULL, request_handler, &client_sock);
-//        pthread_detach(t_id);
-//    }
+        pthread_create(&t_id, NULL, request_handler, &client_sock);
+        pthread_detach(t_id);
+    }
     close(serv_sock);
     return 0;
 }
@@ -125,10 +124,18 @@ void send_error(FILE *fp){
     char protocol[] = "HTTP/1.0 400 Bad Request\r\n";
     char server[] = "Server:Linux Web Server \r\n";
     char cnt_len[] = "Content-length:2048\r\n";
-    char cnt_type[] = "Content-type:text/html\r\n";
-    char content[] = "<html><head><title>NETWORK</title></head>"
-                     "<body><font size = 5><br> ERROR </font></body>"
+    char cnt_type[] = "Content-type:text/html\r\n\r\n";
+    char content[] = "<!DOCTYPE html>\n"
+                     "<html lang=\"en\">\n"
+                     "<head>\n"
+                     "    <meta charset=\"UTF-8\">\n"
+                     "    <title>Not Found</title>\n"
+                     "</head>\n"
+                     "<body>\n"
+                     "Path not Found;\n"
+                     "</body>\n"
                      "</html>";
+
     fputs(protocol, fp);
     fputs(server, fp);
     fputs(cnt_len, fp);
