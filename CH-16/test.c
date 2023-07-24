@@ -1,14 +1,8 @@
-#include<stdio.h>
-#include <unistd.h>
-#include <string.h>
-#define INT_SIZE sizeof(int)
-
-int main(){
-    char buf[30];
-    *(int*)buf = 65535;
-    scanf("%d", buf);
-    int val = buf[0];
-    memcpy(&val, buf, 4);
-    printf("%d\n", *buf);
+#include <stdio.h>
+#include <memory.h>
+#include <stdlib.h>
+#include <pthread.h>
+#define SIZE sizeof(long) * 1001
+int main() {
+    pthread_create()
 }
-//18748507626
