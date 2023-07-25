@@ -3,7 +3,7 @@
 #include <semaphore.h>
 void *read(void *arg);
 void *write(void *arg);
-int sum = 0;
+int num = 0;
 sem_t sem_one, sem_two;
 int main(int argc, char *argv[]){
     sem_init(&sem_one, 0, 0);
@@ -26,20 +26,20 @@ void* read(void* args){
     for(int i = 0; i < 5; i++){
         fputs("Input num: ", stdout);
         sem_wait(&sem_two);
-        scanf("%d", &sum);
+        scanf("%d", &num);
         sem_post(&sem_one);
     }
     return NULL;
 }
 
 void* write(void* args){
-    int num = 0, value;
+    int sum = 0;
     for(int i = 0; i < 5; i++){
         sem_wait(&sem_one);
-        num += sum;
+        sum += num;
         sem_post(&sem_two);
     }
-    printf("Result: %d\n", num);
+    printf("Result: %d\n", sum);
     return NULL;
 }
 

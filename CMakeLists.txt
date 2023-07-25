@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.25)
 project(Code)
 
 set(CMAKE_CXX_STANDARD 11)
-
 add_executable(hello_server CH-1/1.1hello_server.cpp)
 add_executable(1.2hello_client CH-1/1.2hello_client.cpp)
 add_executable(1.3hello_client CH-1/1.3hello_client.cpp)

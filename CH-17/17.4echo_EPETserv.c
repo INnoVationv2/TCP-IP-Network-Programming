@@ -60,15 +60,20 @@ int main(int argc, char* argv[]){
                 epoll_ctl(epfd, EPOLL_CTL_ADD, client_sock, &event);
                 printf("Connected client %d\n", client_sock);
             } else {
-                char buf[30];
-                ssize_t strlen = read(ep_events[i].data.fd, buf, 30);
-                if(strlen == 0){
-                    epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
-                    close(ep_events[i].data.fd);
-                    printf("Closed Clients: %d\n", ep_events[i].data.fd);
-                    break;
-                } else {
-                    write(ep_events[i].data.fd, buf, strlen);
+                while(1){
+                    char buf[30];
+                    ssize_t strlen = read(ep_events[i].data.fd, buf, 30);
+                    if(strlen == 0){
+                        epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
+                        close(ep_events[i].data.fd);
+                        printf("Closed Clients: %d\n", ep_events[i].data.fd);
+                        break;
+                    } else if(strlen < 0) {
+                        if(errno == EAGAIN)
+                            break;
+                    } else {
+                        write(ep_events[i].data.fd, buf, strlen);
+                    }
                 }
             }
         }
